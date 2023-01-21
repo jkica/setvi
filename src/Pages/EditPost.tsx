@@ -140,6 +140,7 @@ export const EditPost = () => {
                         />
                         {/* TODO@jkica: should we be able to change the userId? */}
                         <TextField
+                            disabled
                             onChange={e => handleFieldChange('userId', e.target.value)}
                             label="User ID"
                             value={post.userId}
