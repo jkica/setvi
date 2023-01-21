@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+// components
+import {AddPost} from './Pages/AddPost';
+import {EditPost} from './Pages/EditPost';
+import {AllPosts} from './Pages/AllPosts';
+import {GlobalProvider} from './context/GlobalState';
+import {Header} from "./components/Header/Header";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div>
+            <Router>
+                <Header/>
+                <GlobalProvider>
+                    <div className="container">
+                        <Routes>
+                            <Route path="/" element={<AllPosts />}/>
+                            <Route path="/add" element={<AddPost />}/>
+                            <Route path="/posts/:id" element={<EditPost />}/>
+                        </Routes>
+                    </div>
+                </GlobalProvider>
+            </Router>
+        </div>
+    );
 }
 
 export default App;
