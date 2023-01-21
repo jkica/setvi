@@ -17,7 +17,8 @@ export const EditPost = () => {
     const { editPost, removePost } = useContext(GlobalContext);
     const { id } = useParams();
     const [inputValuesChanged, setInputValuesChanged] = useState(false);
-    const [post, setPost] = useState<Post>()
+    const [post, setPost] = useState<Post>();
+    // TODO@jkica: maybe move toaster to context?
     const [toaster, setToaster] = useState({
         visible: false,
         success: false,
@@ -159,19 +160,19 @@ export const EditPost = () => {
                         </Button>
                     </Paper>
                 }
-                <Snackbar
-                    open={toaster.visible}
-                    autoHideDuration={1500}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    onClose={onToasterClose}>
-                    <Alert
-                        variant="filled"
-                        onClose={onToasterClose}
-                        severity={toaster.success ? 'success' : 'error'}>
-                        {toaster.message}
-                    </Alert>
-                </Snackbar>
             </Container>
+            <Snackbar
+                open={toaster.visible}
+                autoHideDuration={1500}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                onClose={onToasterClose}>
+                <Alert
+                    variant="filled"
+                    onClose={onToasterClose}
+                    severity={toaster.success ? 'success' : 'error'}>
+                    {toaster.message}
+                </Alert>
+            </Snackbar>
         </div>
     )
 }

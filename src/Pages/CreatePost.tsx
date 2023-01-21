@@ -7,7 +7,7 @@ import { createUrl } from "../constants/enpoints";
 // components
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import { TextField } from "@mui/material";
+import { Alert, Snackbar, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 
 export const CreatePost = () => {
@@ -18,8 +18,14 @@ export const CreatePost = () => {
         title: '',
         body: '',
         userId: 1
-    })
-    const [error, setError] = useState(false);
+    });
+    // TODO@jkica: maybe move toaster to context?
+    const [toaster, setToaster] = useState({
+        visible: false,
+        success: false,
+        type: '',
+        message: ''
+    });
 
     const handleFieldChange = (field: string, value: string) => {
         setInputValuesChanged(true)
@@ -32,7 +38,6 @@ export const CreatePost = () => {
     }
 
     const submit = () => {
-        console.log(formData)
         axios.post(
             createUrl(),
             formData,
@@ -43,18 +48,34 @@ export const CreatePost = () => {
             })
             .then(res => {
                 createPost(res.data);
-                navigate('/')
+                setToaster({
+                    visible: true,
+                    success: true,
+                    type: 'create',
+                    message: 'Post Created'
+                });
             })
             .catch(err => {
-                // TODO@jkcia: catch error
-
+                setToaster({
+                    visible: true,
+                    success: false,
+                    type: 'create',
+                    message: 'Error Creating Post'
+                });
             })
     }
 
-    const validate = (input: any) => {
-        // validate here
+    const onToasterClose = () => {
+        setToaster(prevState => {
+            return {
+                ...prevState,
+                visible: false
+            }
+        });
 
-        return true;
+        toaster.success &&
+        toaster.type === 'create' &&
+        navigate('/');
     }
 
     return (
@@ -66,16 +87,10 @@ export const CreatePost = () => {
                     </div>
                     <TextField
                         onChange={e => handleFieldChange('title', e.target.value)}
-                        error={error}
-                        label="Title"
-                        helperText={error ? 'Error msg' : ''}
-                    />
+                        label="Title" />
                     <TextField
                         onChange={e => handleFieldChange('body', e.target.value)}
-                        error={error}
-                        label="Description"
-                        helperText={error ? 'Error msg' : ''}
-                    />
+                        label="Description" />
                     <Button
                         type="submit"
                         onClick={submit}
@@ -92,6 +107,18 @@ export const CreatePost = () => {
                     </Button>
                 </Paper>
             </Container>
+            <Snackbar
+                open={toaster.visible}
+                autoHideDuration={1500}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                onClose={onToasterClose}>
+                <Alert
+                    variant="filled"
+                    onClose={onToasterClose}
+                    severity={toaster.success ? 'success' : 'error'}>
+                    {toaster.message}
+                </Alert>
+            </Snackbar>
         </div>
     )
 }
