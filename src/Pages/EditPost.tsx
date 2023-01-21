@@ -138,7 +138,7 @@ export const EditPost = () => {
                             label="Description"
                             value={post.body}
                         />
-                        {/* TODO@jkica: should we be able to change the userId? */}
+                        {/* TODO@jkica: should we enable changing the userId? */}
                         <TextField
                             disabled
                             onChange={e => handleFieldChange('userId', e.target.value)}
