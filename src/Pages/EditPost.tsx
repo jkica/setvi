@@ -8,7 +8,7 @@ import { removeUrl, getUrl, editUrl } from "../constants/enpoints";
 // components
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import {IconButton, TextField, Tooltip} from "@mui/material";
+import { Alert, IconButton, Snackbar, TextField, Tooltip } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from "@mui/material/Button";
 
@@ -18,7 +18,12 @@ export const EditPost = () => {
     const { id } = useParams();
     const [inputValuesChanged, setInputValuesChanged] = useState(false);
     const [post, setPost] = useState<Post>()
-    const [error, setError] = useState(false);
+    const [toaster, setToaster] = useState({
+        visible: false,
+        success: false,
+        type: '',
+        message: ''
+    });
     
     const getPost = () => {
         setInputValuesChanged(false);
@@ -28,8 +33,12 @@ export const EditPost = () => {
                 setPost(res.data)
             })
             .catch(err => {
-                // TODO@jkcia: catch error
-
+                setToaster({
+                    visible: true,
+                    success: false,
+                    type: 'get',
+                    message: 'Error fetching the post'
+                });
             })
     }
 
@@ -50,10 +59,20 @@ export const EditPost = () => {
             .then(res => {
                 editPost(res.data);
                 setInputValuesChanged(false);
+                setToaster({
+                    visible: true,
+                    success: true,
+                    type: 'update',
+                    message: 'Post Updated'
+                });
             })
             .catch(err => {
-                // TODO@jkcia: catch error
-
+                setToaster({
+                    visible: true,
+                    success: false,
+                    type: 'update',
+                    message: 'Error updating the post'
+                });
             })
     }
     
@@ -61,19 +80,35 @@ export const EditPost = () => {
         id && axios.delete(removeUrl(+id))
             .then(res => {
                 removePost(+id);
-                navigate('/')
+                setToaster({
+                    visible: true,
+                    success: true,
+                    type: 'delete',
+                    message: 'Post Deleted'
+                });
             })
             .catch(err => {
-                // TODO@jkcia: catch error
-
+                setToaster({
+                    visible: true,
+                    success: false,
+                    type: 'delete',
+                    message: 'Error Deleting Post'
+                });
             })
         
     }
-
-    const validate = (input: any) => {
-        // validate here
-
-        return true;
+    
+    const onToasterClose = () => {
+        setToaster(prevState => {
+            return {
+                ...prevState,
+                visible: false
+            }
+        });
+        
+        toaster.success &&
+        toaster.type === 'delete' &&
+        navigate('/');
     }
     
     useEffect(() => getPost(), [id])
@@ -94,25 +129,19 @@ export const EditPost = () => {
                         </div>
                         <TextField
                             onChange={e => handleFieldChange('title', e.target.value)}
-                            error={error}
                             label="Title"
                             value={post.title}
-                            helperText={error ? 'Error msg' : ''}
                         />
                         <TextField
                             onChange={e => handleFieldChange('body', e.target.value)}
-                            error={error}
                             label="Description"
                             value={post.body}
-                            helperText={error ? 'Error msg' : ''}
                         />
                         {/* TODO@jkica: should we be able to change the userId? */}
                         <TextField
                             onChange={e => handleFieldChange('userId', e.target.value)}
-                            error={error}
                             label="User ID"
                             value={post.userId}
-                            helperText={error ? 'Error msg' : ''}
                         />
                         <Button
                             onClick={submit}
@@ -130,6 +159,18 @@ export const EditPost = () => {
                         </Button>
                     </Paper>
                 }
+                <Snackbar
+                    open={toaster.visible}
+                    autoHideDuration={1500}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    onClose={onToasterClose}>
+                    <Alert
+                        variant="filled"
+                        onClose={onToasterClose}
+                        severity={toaster.success ? 'success' : 'error'}>
+                        {toaster.message}
+                    </Alert>
+                </Snackbar>
             </Container>
         </div>
     )
