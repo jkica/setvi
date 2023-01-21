@@ -16,8 +16,6 @@ import Paper from '@mui/material/Paper';
 import { CircularProgress } from "@mui/material";
 
 export const AllPosts = () => {
-    // TODO@jkica: remove ignore
-    // @ts-ignore
     const {posts, initPosts} = useContext(GlobalContext);
     const [busy, setBusy] = useState(true);
     const navigate = useNavigate();

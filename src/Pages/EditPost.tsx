@@ -14,17 +14,10 @@ import Button from "@mui/material/Button";
 
 export const EditPost = () => {
     const navigate = useNavigate();
-    // TODO@jkica: remove ignore
-    // @ts-ignore
     const { editPost, removePost } = useContext(GlobalContext);
     const { id } = useParams();
     const [valuesHaveChanged, setValuesHaveChanged] = useState(false);
-    const [post, setPost] = useState({
-        id: '',
-        title: '',
-        body: '',
-        userId: '',
-    })
+    const [post, setPost] = useState<Post>()
     const [error, setError] = useState(false);
     
     const getPost = () => {
@@ -43,12 +36,12 @@ export const EditPost = () => {
 
     const handleFieldChange = (field: string, value: string) => {
         setValuesHaveChanged(true)
-        setPost({ ...post, [field]: value })
+        post && setPost({ ...post, [field]: value })
     }
     
     const submit = () => {
         // TODO@jkica: move to GlobalContext file?
-        id && axios.put(
+        id && post && axios.put(
             editUrl(+id),
             post,
             {
@@ -57,13 +50,11 @@ export const EditPost = () => {
                 }
             })
             .then(res => {
-                console.log('uspeo apdejt')
                 editPost(post);
                 setValuesHaveChanged(false);
             })
             .catch(err => {
                 // TODO@jkcia: catch error
-                console.log('fejl apdejt')
 
             })
     }
@@ -93,51 +84,54 @@ export const EditPost = () => {
     return (
         <div>
             <Container maxWidth="sm">
-                <Paper className="edit-modal" elevation={3}>
-                    <div className="edit-modal-header">
-                        <div className="edit-modal-header-title">Update Post</div>
-                        <Tooltip title="Delete Post">
-                            <IconButton onClick={deletePost} aria-label="delete" size="large" color="error">
-                                <DeleteIcon fontSize="inherit" />
-                            </IconButton>
-                        </Tooltip>
-                    </div>
-                    <TextField
-                        onChange={e => handleFieldChange('title', e.target.value)}
-                        error={error}
-                        label="Title"
-                        value={post.title}
-                        helperText={error ? 'Error msg' : ''}
-                    />
-                    <TextField
-                        onChange={e => handleFieldChange('body', e.target.value)}
-                        error={error}
-                        label="Description"
-                        value={post.body}
-                        helperText={error ? 'Error msg' : ''}
-                    />
-                    <TextField
-                        onChange={e => handleFieldChange('userId', e.target.value)}
-                        error={error}
-                        label="User ID"
-                        value={post.userId}
-                        helperText={error ? 'Error msg' : ''}
-                    />
-                    <Button
-                        onClick={submit}
-                        disabled={!valuesHaveChanged}
-                        className="edit-modal-btn"
-                        variant="contained">
-                        Apply
-                    </Button>
-                    <Button
-                        onClick={getPost}
-                        disabled={!valuesHaveChanged}
-                        className="edit-modal-btn"
-                        variant="outlined">
-                        Cancel
-                    </Button>
-                </Paper>
+                {
+                    post &&
+                    <Paper className="edit-modal" elevation={3}>
+                        <div className="edit-modal-header">
+                            <div className="edit-modal-header-title">Update Post</div>
+                            <Tooltip title="Delete Post">
+                                <IconButton onClick={deletePost} aria-label="delete" size="large" color="error">
+                                    <DeleteIcon fontSize="inherit" />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                        <TextField
+                            onChange={e => handleFieldChange('title', e.target.value)}
+                            error={error}
+                            label="Title"
+                            value={post.title}
+                            helperText={error ? 'Error msg' : ''}
+                        />
+                        <TextField
+                            onChange={e => handleFieldChange('body', e.target.value)}
+                            error={error}
+                            label="Description"
+                            value={post.body}
+                            helperText={error ? 'Error msg' : ''}
+                        />
+                        <TextField
+                            onChange={e => handleFieldChange('userId', e.target.value)}
+                            error={error}
+                            label="User ID"
+                            value={post.userId}
+                            helperText={error ? 'Error msg' : ''}
+                        />
+                        <Button
+                            onClick={submit}
+                            disabled={!valuesHaveChanged}
+                            className="edit-modal-btn"
+                            variant="contained">
+                            Apply
+                        </Button>
+                        <Button
+                            onClick={getPost}
+                            disabled={!valuesHaveChanged}
+                            className="edit-modal-btn"
+                            variant="outlined">
+                            Cancel
+                        </Button>
+                    </Paper>
+                }
             </Container>
         </div>
     )

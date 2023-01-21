@@ -3,21 +3,27 @@ import AppReducer from './AppReducer';
 import { Post } from '../constants/PostInterface'
 
 interface State {
-    posts: Array<Post>
+    posts: Array<Post>,
+    initPosts: (posts: Post[]) => void,
+    addPost: (post: Post) => void | null,
+    editPost: (post: Post) => void | null,
+    removePost: (id: number) => void | null,
 }
 
 // Initial State
 const initialState: State = {
-    posts: []
+    posts: [],
+    initPosts: () => {},
+    addPost: () => {},
+    editPost: () => {},
+    removePost: () => {}
 }
 
 // Create Context
 export const GlobalContext = createContext(initialState);
 
 // Provider Component
-// TODO@jkica: remove ts-ignore
-// @ts-ignore
-export const GlobalProvider = ({ children }) => {
+export const GlobalProvider = ({ children }: any) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
 
     const initPosts = (posts: Post[]) => {
@@ -50,8 +56,6 @@ export const GlobalProvider = ({ children }) => {
     
     return (
         <GlobalContext.Provider value={{
-            // TODO@jkica: remove ts-ignore
-            // @ts-ignore
             initPosts,
             addPost,
             editPost,
