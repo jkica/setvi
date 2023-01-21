@@ -1,4 +1,4 @@
-import { Post } from '../constants/PostInterface';
+import { Post } from '../types/PostInterface';
 
 export default (
     state: { posts: Post[] },

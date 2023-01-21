@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import AppReducer from './AppReducer';
-import { Post } from '../constants/PostInterface'
+import { Post } from '../types/PostInterface'
 
 interface State {
     posts: Array<Post>,

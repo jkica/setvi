@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { GlobalContext } from "../context/GlobalState";
-import { Post } from '../constants/PostInterface'
+import { Post } from '../types/PostInterface'
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { removeUrl, getUrl, editUrl } from "../constants/enpoints";
@@ -109,6 +109,7 @@ export const EditPost = () => {
                             value={post.body}
                             helperText={error ? 'Error msg' : ''}
                         />
+                        {/* TODO@jkica: should we be able to change the userId? */}
                         <TextField
                             onChange={e => handleFieldChange('userId', e.target.value)}
                             error={error}
