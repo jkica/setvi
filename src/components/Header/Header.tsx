@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useLocation } from "react-router-dom";
 
 // components
 import AppBar from '@mui/material/AppBar';
@@ -13,6 +14,8 @@ import './style.css';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 
 export const Header = () => {
+    const location = useLocation();
+    
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
@@ -24,15 +27,18 @@ export const Header = () => {
                         href="/">
                         <img src={Logo} alt="logo"/>
                     </Typography>
-                    <Button
-                        href="/add"
-                        className="header-create-btn"
-                        color="success"
-                        size="large"
-                        endIcon={<AddCircleOutlineRoundedIcon />}
-                        variant="contained">
-                        Create Post
-                    </Button>
+                    {
+                        location.pathname !== '/create' &&
+                        <Button
+                            href="/create"
+                            className="header-create-btn"
+                            color="success"
+                            size="large"
+                            endIcon={<AddCircleOutlineRoundedIcon />}
+                            variant="contained">
+                            Create Post
+                        </Button>
+                    }
                 </Toolbar>
             </Container>
         </AppBar>

@@ -5,16 +5,16 @@ import { Post } from '../types/PostInterface'
 interface State {
     posts: Array<Post>,
     initPosts: (posts: Post[]) => void,
-    addPost: (post: Post) => void | null,
-    editPost: (post: Post) => void | null,
-    removePost: (id: number) => void | null,
+    createPost: (post: Post) => void,
+    editPost: (post: Post) => void,
+    removePost: (id: number) => void,
 }
 
 // Initial State
 const initialState: State = {
     posts: [],
     initPosts: () => {},
-    addPost: () => {},
+    createPost: () => {},
     editPost: () => {},
     removePost: () => {}
 }
@@ -33,7 +33,7 @@ export const GlobalProvider = ({ children }: any) => {
         })
     }
     
-    const addPost = (post: Post) => {
+    const createPost = (post: Post) => {
         dispatch({
             type: 'ADD_POST',
             payload: post
@@ -57,7 +57,7 @@ export const GlobalProvider = ({ children }: any) => {
     return (
         <GlobalContext.Provider value={{
             initPosts,
-            addPost,
+            createPost,
             editPost,
             removePost,
             posts: state.posts

@@ -16,14 +16,13 @@ export const EditPost = () => {
     const navigate = useNavigate();
     const { editPost, removePost } = useContext(GlobalContext);
     const { id } = useParams();
-    const [valuesHaveChanged, setValuesHaveChanged] = useState(false);
+    const [inputValuesChanged, setInputValuesChanged] = useState(false);
     const [post, setPost] = useState<Post>()
     const [error, setError] = useState(false);
     
     const getPost = () => {
-        setValuesHaveChanged(false);
+        setInputValuesChanged(false);
 
-        // TODO@jkica: move to GlobalContext file?
         id && axios.get(getUrl(+id))
             .then(res => {
                 setPost(res.data)
@@ -35,12 +34,11 @@ export const EditPost = () => {
     }
 
     const handleFieldChange = (field: string, value: string) => {
-        setValuesHaveChanged(true)
+        setInputValuesChanged(true)
         post && setPost({ ...post, [field]: value })
     }
     
     const submit = () => {
-        // TODO@jkica: move to GlobalContext file?
         id && post && axios.put(
             editUrl(+id),
             post,
@@ -50,8 +48,8 @@ export const EditPost = () => {
                 }
             })
             .then(res => {
-                editPost(post);
-                setValuesHaveChanged(false);
+                editPost(res.data);
+                setInputValuesChanged(false);
             })
             .catch(err => {
                 // TODO@jkcia: catch error
@@ -60,7 +58,6 @@ export const EditPost = () => {
     }
     
     const deletePost = () => {
-        // TODO@jkica: move to GlobalContext file?
         id && axios.delete(removeUrl(+id))
             .then(res => {
                 removePost(+id);
@@ -119,14 +116,14 @@ export const EditPost = () => {
                         />
                         <Button
                             onClick={submit}
-                            disabled={!valuesHaveChanged}
+                            disabled={!inputValuesChanged}
                             className="edit-modal-btn"
                             variant="contained">
                             Apply
                         </Button>
                         <Button
                             onClick={getPost}
-                            disabled={!valuesHaveChanged}
+                            disabled={!inputValuesChanged}
                             className="edit-modal-btn"
                             variant="outlined">
                             Cancel

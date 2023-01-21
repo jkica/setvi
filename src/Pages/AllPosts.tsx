@@ -21,7 +21,6 @@ export const AllPosts = () => {
     const navigate = useNavigate();
     
     useEffect(() => {
-        // TODO@jkica: move to GlobalContext file?
         busy && axios.get(getAllUrl())
             .then(res => {
                 initPosts(res.data)
@@ -42,10 +41,10 @@ export const AllPosts = () => {
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell align="left">Title</TableCell>
-                                    <TableCell align="left">Description</TableCell>
-                                    <TableCell align="left">User ID</TableCell>
+                                    <TableCell><strong>ID</strong></TableCell>
+                                    <TableCell align="left"><strong>Title</strong></TableCell>
+                                    <TableCell align="left"><strong>Description</strong></TableCell>
+                                    <TableCell align="left"><strong>User ID</strong></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
